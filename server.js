@@ -36,6 +36,20 @@ app.post("/whatsapp", async (req, res) => {
   try {
     const from = req.body.From; // whatsapp:+972...
     const body = (req.body.Body || "").trim();
+    
+        const aiResp = await openai.responses.create({
+      model: "gpt-5-mini",
+      temperature: 0.6,
+      messages: [
+        { role: "system", content: SYSTEM_PROMPT },
+        { role: "user", content: body }
+      ]
+    });
+
+    const reply =
+      aiResp.output_text ||
+      "היי 💎 ברוכה הבאה ל-Forroy Jewelry. איך אפשר לעזור?";
+
 
     const completion = await openai.chat.completions.create({
       model: "gpt-4.1-mini",
